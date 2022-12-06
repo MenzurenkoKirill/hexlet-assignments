@@ -20,19 +20,30 @@ import java.util.Arrays;
     }
 }*/
 class App {
+    /*    public static String getForwardedVariables(String confFile) {
+            String[] fixparam = Arrays.stream(confFile.split("\n"))
+                    .filter(x -> x.startsWith("environment"))
+                    .map(x -> x.replaceAll("environment=", ""))
+                    .flatMap(x -> Arrays.stream(x.split(",")))
+                    .filter(x -> x.startsWith("X_FORWARDED_"))
+                    .map(x -> x.replaceAll("X_FORWARDED_", ""))
+                    .toArray(String[]::new);
+            String result = "";
+            for (String i : fixparam ) {
+                result += i;
+            }
+            return result;
+        }*/
     public static String getForwardedVariables(String confFile) {
         String[] fixparam = Arrays.stream(confFile.split("\n"))
                 .filter(x -> x.startsWith("environment"))
                 .map(x -> x.replaceAll("environment=", ""))
+                .map(x -> x.replaceAll("\"", ""))
                 .flatMap(x -> Arrays.stream(x.split(",")))
                 .filter(x -> x.startsWith("X_FORWARDED_"))
                 .map(x -> x.replaceAll("X_FORWARDED_", ""))
                 .toArray(String[]::new);
-        String result = "";
-        for (String i : fixparam ) {
-            result += i;
-        }
-        return result;
+        return String.join(",", fixparam);
     }
 }
 //END

@@ -10,7 +10,7 @@ public class Connected implements Connection {
     }
     @Override
     public void connect() {
-        System.out.println("Error! Connection already established");
+        System.out.println("Error! Connection already connected");
     }
     @Override
     public void disconnect() {

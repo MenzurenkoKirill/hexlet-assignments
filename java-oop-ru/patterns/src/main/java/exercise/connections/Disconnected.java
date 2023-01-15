@@ -4,8 +4,8 @@ package exercise.connections;
 import exercise.TcpConnection;
 public class Disconnected implements Connection {
     private TcpConnection tcpConnect;
-    private final String STATE_NAME = "disconnect";
-    Disconnected (TcpConnection tcpConnect) {
+    private final String STATE_NAME = "disconnected";
+    public Disconnected(TcpConnection tcpConnect) {
         this.tcpConnect = tcpConnect;
     }
     @Override
@@ -14,7 +14,7 @@ public class Disconnected implements Connection {
     }
     @Override
     public void write(String txt) {
-        System.out.println(Error! + txt);
+        System.out.println("Error!" + txt);
     }
     @Override
     public void connect() {
@@ -22,7 +22,7 @@ public class Disconnected implements Connection {
     }
     @Override
     public void disconnect() {
-        System.out.println(Error! Connection already broken);
+        System.out.println("Error! Connection already disconnected");
     }
 }
 // END

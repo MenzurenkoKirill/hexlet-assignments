@@ -3,13 +3,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 // BEGIN
-import exercise.connections.*;
-class TcpConnection implements Connection {
+import exercise.connections.Connection;
+import exercise.connections.Disconnected;
+public class TcpConnection implements Connection {
     private String ipAddress;
     private int port;
     private Connection state;
     private List<String> buffer = new ArrayList<>();
-    TcpConnection (String ipAddress, int port) {
+    public TcpConnection(String ipAddress, int port) {
         this.ipAddress = ipAddress;
         this.port = port;
         this.state = new Disconnected(this);
@@ -29,6 +30,9 @@ class TcpConnection implements Connection {
     @Override
     public void disconnect() {
         this.state.disconnect();
+    }
+    public void setState(Connection tcpConnection) {
+        this.state = tcpConnection;
     }
 }
 // END

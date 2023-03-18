@@ -1,0 +1,1 @@
+SELECT first_name, birthday FROM users ORDER BY first_name WHERE birthday > '1999-10-23' LIMIT 3;

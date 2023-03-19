@@ -71,7 +71,7 @@ public class ArticlesServlet extends HttpServlet {
         int page;
         int numberOfArticles;
         int articlesPerPage = 10;
-        if (textPage==null) {
+        if (textPage == null) {
             page = 1;
         } else {
             page = Integer.parseInt(textPage);

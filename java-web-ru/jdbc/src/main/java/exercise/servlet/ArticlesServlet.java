@@ -124,7 +124,39 @@ public class ArticlesServlet extends HttpServlet {
         ServletContext context = request.getServletContext();
         Connection connection = (Connection) context.getAttribute("dbConnection");
         // BEGIN
-        
+        String id = getId(request);
+        Map<String, String> article = new HashMap<>();
+        String queryMaxId = "SELECT MAX(id) FROM articles";
+        int maxId;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(queryMaxId);
+            result.next();
+            maxId = result.getInt("max(id)");
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+        assert id != null;
+        if (Integer.parseInt(id) > maxId) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+
+        String query = "SELECT title, body FROM articles WHERE id=?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, Integer.parseInt(id));
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                article.put("title", rs.getString("title"));
+                article.put("body", rs.getString("body"));
+            }
+        } catch (SQLException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
+        request.setAttribute("article", article);
         // END
         TemplateEngineUtil.render("articles/show.html", request, response);
     }

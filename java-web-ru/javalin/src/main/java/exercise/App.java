@@ -48,7 +48,18 @@ public final class App {
         // При помощи методов routes() и path() маршруты можно группировать
 
         // BEGIN
-        
+        app.routes(() -> {
+            path("articles", () -> {
+                get(ArticleController.listArticles);
+                get("new", ArticleController.newArticle);
+                post(ArticleController.createArticle);
+                get("{id}", ArticleController.showArticle);
+                get("{id}/edit", ArticleController.editArticle);
+                post("{id}/edit", ArticleController.updateArticle);
+                get("{id}/delete", ArticleController.deleteArticle);
+                post("{id}/delete", ArticleController.destroyArticle);
+            });
+        });
         // END
     }
 

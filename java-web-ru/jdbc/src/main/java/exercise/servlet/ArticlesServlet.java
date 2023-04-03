@@ -71,7 +71,7 @@ public class ArticlesServlet extends HttpServlet {
         int page;
         int numberOfArticles;
         int articlesPerPage = 10;
-        if (textPage == null) {
+        if (textPage==null) {
             page = 1;
         } else {
             page = Integer.parseInt(textPage);
@@ -141,8 +141,6 @@ public class ArticlesServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-
-
         String query = "SELECT title, body FROM articles WHERE id=?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);

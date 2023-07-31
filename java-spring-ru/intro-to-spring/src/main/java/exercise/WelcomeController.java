@@ -12,7 +12,7 @@ public class WelcomeController {
         return "Welcome to Spring";
     }
     @GetMapping("/hello")
-    public String welcomeName(@RequestParam(value = "name",defaultValue = "World") String name) {
+    public String welcomeName(@RequestParam(value = "name", defaultValue = "World") String name) {
         return String.format("Welcome, %s!", name);
     }
 }

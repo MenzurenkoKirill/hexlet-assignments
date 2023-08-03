@@ -9,8 +9,6 @@ import lombok.Setter;
 
 // BEGIN
 @Entity
-@Getter
-@Setter
 // END
 public class Person {
 
@@ -19,7 +17,9 @@ public class Person {
     private long id;
 
     // BEGIN
+    @Getter @Setter
     private String firstName;
+    @Getter @Setter
     private String lastName;
     // END
 }

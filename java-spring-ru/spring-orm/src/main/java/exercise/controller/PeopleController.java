@@ -1,7 +1,6 @@
 package exercise.controller;
 
 import exercise.model.Person;
-import exercise.dto.PersonDto;
 import exercise.repository.PersonRepository;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,7 @@ public class PeopleController {
 
     @GetMapping(path = "/{id}")
     public Person getPerson(@PathVariable long id) {
-        return personRepository.findById(id).orElseThrow();
+        return personRepository.findById(id);
     }
 
     @GetMapping(path = "")
@@ -37,12 +36,12 @@ public class PeopleController {
     public void createPerson(@RequestBody Person person) {
         this.personRepository.save(person);
     }
-    @DeleteMapping(path ="/{id}")
+    @DeleteMapping(path = "/{id}")
     public void deletePerson(@PathVariable("id") long id) {
         this.personRepository.deleteById(id);
     }
-    @PatchMapping(path ="/{id}")
-    public void updateData(@PathVariable("id") long id, @RequestBody Person person) {
+    @PatchMapping(path = "/{id}")
+    public void updatePerson(@PathVariable("id") long id, @RequestBody Person person) {
         Person updatePerson = this.personRepository.findById(id);
         updatePerson.setFirstName(person.getFirstName());
         updatePerson.setLastName(person.getLastName());

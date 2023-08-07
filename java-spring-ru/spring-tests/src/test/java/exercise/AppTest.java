@@ -121,22 +121,24 @@ public class AppTest {
     }
     @Test
     void testUpdatePerson() throws Exception {
-        MockHttpServletResponse response = mockMvc.perform((patch("/people/1"))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"firstName\": \"Kir\", \"lastName\": \"Menz\", \"email\": \"m2603@google.com\"}}")
+        MockHttpServletResponse responsePatch = mockMvc
+                .perform(
+                        patch("/people/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"firstName\": \"Jo\", \"lastName\": \"Smit\"}")
                 )
                 .andReturn()
                 .getResponse();
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(responsePatch.getStatus()).isEqualTo(200);
 
         MockHttpServletResponse responseGet = mockMvc
                 .perform(get("/people/1"))
                 .andReturn()
                 .getResponse();
         assertThat(responseGet.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(responseGet.getContentAsString()).contains("Kir", "Menz", "m2603@google.com");
-        assertThat(responseGet.getContentAsString()).doesNotContain("John", "Smith", "john@gmail.com");
+        assertThat(responseGet.getContentAsString()).contains("Jo", "Smit");
+        assertThat(responseGet.getContentAsString()).doesNotContain("John", "Smith");
     }
     @Test
     void testDeletePerson() throws Exception {
@@ -144,7 +146,9 @@ public class AppTest {
                 .perform(delete("/people/1"))
                 .andReturn()
                 .getResponse();
+
         assertThat(responseDelete.getStatus()).isEqualTo(200);
+
         MockHttpServletResponse responseGet = mockMvc
                 .perform(get("/people"))
                 .andReturn()

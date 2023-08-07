@@ -123,7 +123,7 @@ public class AppTest {
     void testUpdatePerson() throws Exception {
         MockHttpServletResponse response = mockMvc.perform((patch("/people/1"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"firstName\": \"Kir\", \"lastName\": \"Menz\"}")
+                .content("{\"firstName\": \"Kir\", \"lastName\": \"Menz\", \"email\": \"m2603@google.com\"}}")
                 )
                 .andReturn()
                 .getResponse();
@@ -135,8 +135,8 @@ public class AppTest {
                 .andReturn()
                 .getResponse();
         assertThat(responseGet.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(responseGet.getContentAsString()).contains("Kir", "Menz");
-        assertThat(responseGet.getContentAsString()).doesNotContain("John", "Smith");
+        assertThat(responseGet.getContentAsString()).contains("Kir", "Menz", "m2603@google.com");
+        assertThat(responseGet.getContentAsString()).doesNotContain("John", "Smith", "john@gmail.com");
     }
     @Test
     void testDeletePerson() throws Exception {

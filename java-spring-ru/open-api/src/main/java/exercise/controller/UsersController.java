@@ -94,8 +94,8 @@ public class UsersController {
     // BEGIN
     @Operation(summary = "Update user by his id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User updated"),
-            @ApiResponse(responseCode = "404", description = "User with that id not found")
+        @ApiResponse(responseCode = "200", description = "User updated"),
+        @ApiResponse(responseCode = "404", description = "User with that id not found")
     })
     @PatchMapping(path = "/{id}")
     public void updateUser(

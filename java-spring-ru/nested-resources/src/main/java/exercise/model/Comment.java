@@ -17,7 +17,7 @@ public class Comment {
     private long id;
     @Lob
     private String content;
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Post post;
     // END

@@ -20,7 +20,7 @@ import exercise.exception.ResourceNotFoundException;
 
 @RestController
 @RequestMapping("/users")
-public class nbbbbbbbbbbbbb                                                        bbbbbbUserController {
+public class UserController {
 
     @Autowired
     private UserRepository userRepository;

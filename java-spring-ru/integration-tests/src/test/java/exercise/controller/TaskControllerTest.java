@@ -76,25 +76,35 @@ class ApplicationTest {
     public void testShow() throws Exception {
         var task = generateTask();
         taskRepository.save(task);
-        var request = get("/tasks/" + task.getId()).contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(task));
-        var result = mockMvc.perform(request)
+        var result = mockMvc.perform(get("/tasks/" + task.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
-        var test = om.readValue(body, Task.class);
-        assertThat(test).isEqualTo(task);
+        assertThatJson(body).and(
+                a -> a.node("title").isEqualTo(task.getTitle()),
+                a -> a.node("description").isEqualTo(task.getDescription())
+        );
     }
 
     @Test
     public void testCreate() throws Exception {
         var task = generateTask();
-        var request = post("/tasks").contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(task));
-        var result = mockMvc.perform(request).andExpect(status().isCreated()).andReturn();
+        var data = new HashMap<>();
+        data.put("title", task.getTitle());
+        data.put("description", task.getDescription());
+        var request = post("/tasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(om.writeValueAsString(data));
+        var result = mockMvc.perform(request)
+                .andExpect(status().isCreated())
+                .andReturn();
         var body = result.getResponse().getContentAsString();
-        var test = om.readValue(body, Task.class);
-        assertThat(test).isEqualTo(task);
+        assertThatJson(body).and(
+                a -> a.node("title").isEqualTo(task.getTitle()),
+                a -> a.node("description").isEqualTo(task.getDescription())
+        );
+        var description = taskRepository.findByTitle(task.getTitle()).get().getDescription();
+        assertThat(description).isEqualTo(task.getDescription());
     }
 
     @Test
@@ -102,22 +112,34 @@ class ApplicationTest {
         var task = generateTask();
         taskRepository.save(task);
         var data = new HashMap<>();
-        data.put("title", "noTitle");
-        var request = put("/tasks/" + task.getId()).contentType(MediaType.APPLICATION_JSON)
+        data.put("title", "other title");
+        data.put("description", "other description");
+        var request = put("/tasks/" + task.getId())
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
-        mockMvc.perform(request).andExpect(status().isOk());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).and(
+                a -> a.node("title").isEqualTo("other title"),
+                a -> a.node("description").isEqualTo("other description")
+        );
         task = taskRepository.findById(task.getId()).get();
-        assertThat(task.getTitle()).isEqualTo("noTitle");
+        assertThat(task.getTitle()).isEqualTo("other title");
+        assertThat(task.getDescription()).isEqualTo("other description");
     }
 
     @Test
     public void testDelete() throws Exception {
         var task = generateTask();
         taskRepository.save(task);
-        var request = delete("/tasks/" + task.getId());
-        mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-        taskRepository.deleteById(task.getId());
-        assertThat(taskRepository.findById(task.getId()).isEmpty());
+        mockMvc.perform(delete("/tasks/" + task.getId()))
+                .andExpect(status().isOk());
+        var title = taskRepository.findByTitle(task.getTitle());
+        var description = taskRepository.findByTitle(task.getDescription());
+        assertThat(title).isEmpty();
+        assertThat(description).isEmpty();
     }
     // END
 }

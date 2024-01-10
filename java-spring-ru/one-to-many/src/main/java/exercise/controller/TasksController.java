@@ -27,6 +27,57 @@ import jakarta.validation.Valid;
 @RequestMapping("/tasks")
 public class TasksController {
     // BEGIN
-    
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TaskMapper taskMapper;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    List<TaskDTO> index() {
+        return taskRepository.findAll().stream()
+                .map(taskMapper::map)
+                .toList();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    TaskDTO create(@Valid @RequestBody TaskCreateDTO taskData) {
+        var task = taskMapper.map(taskData);
+        taskRepository.save(task);
+        return taskMapper.map(task);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    TaskDTO show(@PathVariable Long id) {
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+        return taskMapper.map(task);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    TaskDTO update(@RequestBody @Valid TaskUpdateDTO taskData, @PathVariable Long id) {
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        var user = userRepository.findById(taskData.getAssigneeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+        user.addTask(task);
+        userRepository.save(user);
+        taskMapper.update(taskData, task);
+        taskRepository.save(task);
+        return taskMapper.map(task);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void destroy(@PathVariable Long id) {
+        taskRepository.deleteById(id);
+    }
     // END
 }
